@@ -19,13 +19,16 @@ def brute_force(Url, v, name):
             urls.write(url_subdomain + "\n")
             urls.close()
         else:
-            print(f"{req.status_code}  {Url}")
+            print(f"{req.status_code}  {url_subdomain}")
     except:
         pass
 
 
 def check_brute_force(type_brute_force: list, Url: str, name):
-    os.makedirs(fr"Results_{Url.replace(':', '')}", exist_ok=True)
+    try:
+     os.makedirs(fr"Results_{Url.replace(':', '')}", exist_ok=True)
+    except:
+        pass
     with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
         for i, v in enumerate(type_brute_force):
             executor.submit(brute_force, Url,  v, name)

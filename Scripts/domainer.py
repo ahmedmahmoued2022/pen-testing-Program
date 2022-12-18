@@ -12,21 +12,32 @@ from sys import platform
 
 
 class Engines:
-    @staticmethod
-    def ask(target):
+
+
+    def ask_t(self,target,i):
+         
+         output = []
+         reg = re.compile(f"\"domain\":.*\.{target}.*\.com")
+         ask = requests.get(f"https://www.ask.com/web?q={target}&qsrc=998&page={i}")
+         ask_res = BeautifulSoup(ask.text, "html.parser").prettify()
+         ask_subs = reg.findall(ask_res)
+         for s in ask_subs:
+                s = re.sub('.com.*||https://||www\.||"domain":"|\s', "", s)
+                print(s + ".com")
+                output.append(s + ".com")
+         return output
+
+
+
+
+    
+    def ask(self,target):
         output = []
         reg = re.compile(f"\"domain\":.*\.{target}.*\.com")
         print("*********************search in ask**********************************")
-        for i in range(20):
-            ask = requests.get(f"https://www.ask.com/web?q={target}&qsrc=998&page={i}")
-            ask_res = BeautifulSoup(ask.text, "html.parser").prettify()
-
-            ask_subs = reg.findall(ask_res)
-
-            for s in ask_subs:
-                s = re.sub('.com.*||https://||www\.||"domain":"', "", s)
-                print(s + ".com")
-                output.append(s + ".com")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+         for i in range(20):
+           output.append(executor.submit(self.ask_t,target,i)) 
         return output
 
     @staticmethod
@@ -40,29 +51,15 @@ class Engines:
         crt_subs = reg.findall(crt_res)
 
         for s in crt_subs:
-            s = re.sub("\*\.|", "", s)
+            s = re.sub("\*\.|\s", "", s)
             output.append(s)
             print(s)
         return output
-
-    @staticmethod
-    def yahoo(target):
-        output = []
-        reg = re.compile(f".*\.{target}.*")
-        print("***********************search in yahoo*********************")
-        for i in range(20):
-            yahoo = requests.get(f"https://search.yahoo.com/search?p={target}&pz=7&bct=0&b={i + 7}&pz=7&bct=0&xargs=0")
-            yahoo_res = BeautifulSoup(yahoo.text, "html.parser").prettify()
-
-            y_subs = reg.findall(yahoo_res)
-
-            for s in y_subs:
-                s = re.sub("<a.*>|\s|</span>", "", s)
-                output.append(s)
-                print(s)
-        return output
+    
 
 
+    
+    
 def bf_t(site):
     lock = threading.Lock
     output = []
@@ -97,6 +94,7 @@ def bruteforce(target, choice):
     result = []
     futures = []
     name_file = choose_file_size(choice)
+   
     path = rf"domainer_files/{name_file}.txt"
     if platform == "linux" or platform == "linux2":
         path = rf"domainer_files/{name_file}.txt"
@@ -158,9 +156,10 @@ def bruteforcel(target, choice):
 
 def search_single(target):
     x = Engines()
-    fiter_sub_domain = set(x.ask(target) + x.crt(target) + x.yahoo(target))
-
-    return list(fiter_sub_domain)
+    filter_sub_domain = set(x.ask(target)+x.crt(target)  )
+    print(filter_sub_domain)
+    print("*******************End Search*********")
+    return list(filter_sub_domain)
 
 
 def searchl(path):
@@ -168,7 +167,7 @@ def searchl(path):
     x = Engines()
     my_sub_domains = []
     for t in target:
-        my_sub_domains += x.yahoo(t) + x.crt(t) + x.ask(t)
+        my_sub_domains +=  x.crt(t) + x.ask(t)
     filter_sub_domains = set(my_sub_domains)
 
     return list(filter_sub_domains)

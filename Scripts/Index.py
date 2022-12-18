@@ -24,6 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
         r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
         r'(?::\d+)?'  # optional port
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    
     payload = None
     is_orc = None
 
@@ -196,6 +197,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def recon_tool_2(self):
         self.output_word_list.clear()
         url1 = self.get_url2.text()
+        new_url=""
+        success_sub_domains=""
         check_url = re.match(self.regex_url, url1) is not None
         print(check_url)
         current_index = self.word_list.currentIndex()
@@ -233,8 +236,11 @@ class MainWindow(QtWidgets.QMainWindow):
             else:
                 self.output_word_list.addItems(success_sub_domains)
         else:
-            with open(rf"Results_{new_url.replace(':', '')}\urls_{name}.txt", "r") as u:
+            try:
+             with open(rf"Results_{new_url.replace(':', '')}\urls_{name}.txt", "r") as u:
                 success_sub_domains += u.readlines()
+            except:
+                pass
             if len(success_sub_domains) == 1:
                 self.output_word_list.addItem(f"Nothing found for {success_sub_domains[0]} choose another one ")
             else:
@@ -327,9 +333,9 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             if not domain:
                 raise TypeError
-            result1 = t5.search_single(domain)
+            result1 = t5.bruteforce(domain)
             output.addItems(result1)
-            result2 = t5.bruteforce(domain, file_size)
+            result2 = t5.search_single(domain, file_size)
             output.addItems(result2)
         except TypeError as Error:
             msg = self.error

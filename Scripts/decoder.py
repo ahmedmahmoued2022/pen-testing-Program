@@ -45,18 +45,30 @@ class Encode:
 class Decode:
     @staticmethod
     def url_decode(String):
-        return urllib.parse.unquote_plus(String)
+        try:
+         return urllib.parse.unquote_plus(String)
+        except:
+            pass
 
     @staticmethod
     def base64_decode(String):
         String += '=' * (len(String) % 4)
-        return base64.b64decode(String).decode()
+        try:
+         return base64.b64decode(String).decode()
+        except:
+            pass
 
     @staticmethod
     def base32_decode(String):
-        return base64.b32decode(String).decode()
+        try:
+         return base64.b32decode(String).decode()
+        except:
+            pass
 
     @staticmethod
     def html_decode(String):
-        return html.unescape(String)
+        try:
+         return html.unescape(String)
+        except:
+            pass
 

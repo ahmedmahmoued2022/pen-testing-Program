@@ -6,13 +6,20 @@ import time
 
 
 def scan(ip, port):
+    
     lock = threading.Lock()
     scanner = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     scanner.settimeout(.1)
-    ip = re.sub("(https:// | http:// | \/)", '', ip)
-    ip = socket.gethostbyname(ip)
-
+    
+    print(ip)
+    
+    
     try:
+        ip = socket.gethostbyname(ip)
+    except:
+        print(" invaild domain")
+    try:
+        
         scanner.connect((ip, port))
         scanner.close()
         with lock:

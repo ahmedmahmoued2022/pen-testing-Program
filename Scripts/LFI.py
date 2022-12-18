@@ -13,7 +13,7 @@ def testExtention(url):
     else:
         place_file = r"LFI_fies\extensions.txt"
 
-    with open(place_file, "r") as extentionFile:
+    with open(place_file, "r",encoding="utf8") as extentionFile:
         for extension in extentionFile:
             ext = re.compile(".*{}".format(extension.strip()))
             if ext.search(url):
@@ -31,7 +31,7 @@ def LFIinj(url, extension):
     responses = []
     fails = []
     counter = 1
-    with open(place_file, "r") as lfiPayloads:
+    with open(place_file, "r",encoding="utf8") as lfiPayloads:
         for payload in lfiPayloads:
             newUrl = re.sub('=.*{}'.format(extension.strip()), '=', url)
             newUrl = newUrl + payload

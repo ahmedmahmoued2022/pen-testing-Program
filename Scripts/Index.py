@@ -333,8 +333,8 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             if not domain:
                 raise TypeError
-            result1 = t5.bruteforce(domain)
-            output.addItems(result1)
+           # result1 = t5.bruteforce(domain)
+           # output.addItems(result1)
             result2 = t5.search_single(domain, file_size)
             output.addItems(result2)
         except TypeError as Error:

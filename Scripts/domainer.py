@@ -37,7 +37,7 @@ class Engines:
         print("*********************search in ask**********************************")
         with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
          for i in range(20):
-           output.append(executor.submit(self.ask_t,target,i)) 
+           output.append(str(executor.submit(self.ask_t,target,i)) )
         return output
 
     @staticmethod
@@ -83,7 +83,7 @@ def choose_file_size(n):
         case 0:
             name = "small"
         case 1:
-            name = "medium"
+            name = "meduim"
         case 2:
             name = "list"
     return name
@@ -177,9 +177,9 @@ def start():
     print("choose single<1> or list<?>: ", end="")
     choice = int(input())
     type = int(input("Enter type of file you want work on\n"
-                     "1. small file"
-                     "2. medium file"
-                     "3. list file\n"
+                     "0. small file"
+                     "1. medium file"
+                     "2. list file\n"
                      "choose<?>: "))
     if choice == 1:
         target = input("Enter target ex 'google.com'>: ")
